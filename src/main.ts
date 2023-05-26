@@ -134,16 +134,11 @@ const gestionarResultado = () => {
   nuevaPartida();
 };
 
-const mePlanto = () => {
-  mostrarPuntuacion();
-  let mensaje: string = `Tu puntuación es ${puntuacion}`;
-  mostrarMensaje(mensaje);
-
+const mensajeSegunPuntuacion = (mensaje: string): void => {
   if (puntuacion < 4) {
     mensaje = `${puntuacion} Has sido muy conservador 😐`;
     mostrarMensaje(mensaje);
   }
-
   if (puntuacion >= 4 && puntuacion < 6) {
     mensaje = `${puntuacion} Te ha entrado el canguelo eh? 😉`;
     mostrarMensaje(mensaje);
@@ -152,14 +147,17 @@ const mePlanto = () => {
     mensaje = `${puntuacion} Casi casi...🫣🫣`;
     mostrarMensaje(mensaje);
   }
+};
+
+const mePlanto = () => {
+  mostrarPuntuacion();
+  let mensaje: string = `Tu puntuación es ${puntuacion}`;
+  mensajeSegunPuntuacion(mensaje);
 
   resultadoPartida();
-  nuevaPartida();
 
   deshabilitaBotonComprobarCarta();
   deshabilitaBotonMePlanto();
-
-  queHabriaPasado();
 };
 
 const habilitaBotonComprobarCarta = () => {
@@ -185,22 +183,6 @@ const deshabilitaBotonMePlanto = () => {
   }
 };
 
-document.addEventListener("DOMContentLoaded", mostrarPuntuacion);
-const botonComprobarCarta = document.getElementById("dame-carta");
-if (botonComprobarCarta && botonComprobarCarta instanceof HTMLButtonElement) {
-  botonComprobarCarta.addEventListener("click", dameCarta);
-}
-
-const botonMePlanto = document.getElementById("me-planto");
-if (botonMePlanto && botonMePlanto instanceof HTMLButtonElement) {
-  botonMePlanto.addEventListener("click", mePlanto);
-  botonMePlanto.addEventListener("click", () => {
-    {
-      botonMePlanto.disabled = true;
-    }
-  });
-}
-
 const puntuacionACero = () => {
   puntuacion = 0;
 };
@@ -213,20 +195,12 @@ const reinicioImagen = () => {
   }
 };
 
-const comprobarbotonQueHabriaPasado = () => {
-  const botonQueHabriaPasado = document.getElementById("boton-nuevo");
-  if (botonQueHabriaPasado) {
-    botonQueHabriaPasado.remove();
-    botonQueHabriaPasadoCreado = false;
+const ocultaBotonNuevaPartida = () => {
+  const botonNuevaPartida = document.getElementById("nueva-partida");
+  if (botonNuevaPartida) {
+    botonNuevaPartida.hidden = true;
   }
 };
-
-const eliminaBotonNuevaPartida = () => {
-  const botonNuevaPartida = document.getElementById("boton-nueva-partida");
-  botonNuevaPartida?.remove();
-};
-
-let botonNuevaPartidaCreado = false;
 
 const handlerNuevaPartida = () => {
   reinicioImagen();
@@ -234,52 +208,40 @@ const handlerNuevaPartida = () => {
   habilitaBotonComprobarCarta();
   habilitaBotonMePlanto();
   mostrarPuntuacion();
-  comprobarbotonQueHabriaPasado();
-  botonNuevaPartidaCreado = false;
-  eliminaBotonNuevaPartida();
+  ocultaBotonNuevaPartida();
+  ocultaBotonQueHabriaPasado();
 };
 
 const nuevaPartida = () => {
-  if (!botonNuevaPartidaCreado) {
-    const botonNuevaPartida = document.createElement("button");
-    botonNuevaPartida.setAttribute("id", "boton-nueva-partida");
-    botonNuevaPartida.innerHTML = "Nueva partida 🆕";
-    botonNuevaPartida.addEventListener("click", handlerNuevaPartida);
-
-    const divBotones = document.getElementById("botones");
-    if (divBotones) {
-      divBotones.appendChild(botonNuevaPartida);
-    }
-    botonNuevaPartidaCreado = true;
+  const botonNuevaPartida = document.getElementById("nueva-partida");
+  if (botonNuevaPartida && botonNuevaPartida instanceof HTMLButtonElement) {
+    botonNuevaPartida.hidden = false;
   }
 };
 
-let botonQueHabriaPasadoCreado = false;
-
-const eliminaBotonQueHabriaPasado = () => {
-  const botonQueHabriaPasado = document.getElementById("boton-nuevo");
-  botonQueHabriaPasado?.remove();
+const ocultaBotonQueHabriaPasado = () => {
+  const botonQueHabriaPasado = document.getElementById("que-habria-pasado");
+  if (
+    botonQueHabriaPasado &&
+    botonQueHabriaPasado instanceof HTMLButtonElement
+  ) {
+    botonQueHabriaPasado.hidden = true;
+  }
 };
 
 const handlerQueHabriaPasado = () => {
   mostrarQueHabriaPasado();
-  botonQueHabriaPasadoCreado = false;
-  eliminaBotonQueHabriaPasado();
+
+  ocultaBotonQueHabriaPasado();
 };
 
 const queHabriaPasado = () => {
-  if (!botonQueHabriaPasadoCreado) {
-    const botonQueHabriaPasado = document.createElement("button");
-    botonQueHabriaPasado.setAttribute("id", "boton-nuevo");
-    botonQueHabriaPasado.innerHTML = "🤔 Si hubiese pedido una carta más...";
-    const divBotones = document.getElementById("botones");
-    if (divBotones) {
-      divBotones.appendChild(botonQueHabriaPasado);
-    }
-
-    botonQueHabriaPasado.addEventListener("click", handlerQueHabriaPasado);
-
-    botonQueHabriaPasadoCreado = true;
+  const botonQueHabriaPasado = document.getElementById("que-habria-pasado");
+  if (
+    botonQueHabriaPasado &&
+    botonQueHabriaPasado instanceof HTMLButtonElement
+  ) {
+    botonQueHabriaPasado.hidden = false;
   }
 };
 
@@ -301,10 +263,32 @@ const mostrarMensajeResultadoPosible = () => {
 };
 
 const mostrarQueHabriaPasado = () => {
-  mostrarResultadoPosible();
+  dameCarta();
   mostrarMensajeResultadoPosible();
 };
 
-const mostrarResultadoPosible = () => {
-  dameCarta();
-};
+document.addEventListener("DOMContentLoaded", mostrarPuntuacion);
+const botonComprobarCarta = document.getElementById("dame-carta");
+if (botonComprobarCarta && botonComprobarCarta instanceof HTMLButtonElement) {
+  botonComprobarCarta.addEventListener("click", dameCarta);
+}
+
+const botonMePlanto = document.getElementById("me-planto");
+if (botonMePlanto && botonMePlanto instanceof HTMLButtonElement) {
+  botonMePlanto.addEventListener("click", mePlanto);
+  botonMePlanto.addEventListener("click", nuevaPartida);
+  botonMePlanto.addEventListener("click", queHabriaPasado);
+  botonMePlanto.addEventListener("click", () => {
+    {
+      botonMePlanto.disabled = true;
+    }
+  });
+}
+const botonNuevaPartida = document.getElementById("nueva-partida");
+if (botonNuevaPartida && botonNuevaPartida instanceof HTMLButtonElement) {
+  botonNuevaPartida.addEventListener("click", handlerNuevaPartida);
+}
+const botonQueHabriaPasado = document.getElementById("que-habria-pasado");
+if (botonQueHabriaPasado && botonQueHabriaPasado instanceof HTMLButtonElement) {
+  botonQueHabriaPasado.addEventListener("click", handlerQueHabriaPasado);
+}
