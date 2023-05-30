@@ -1,5 +1,18 @@
 let puntuacion: number = 0;
 
+type EstadoPartida = "POR_DEBAJO_MAXIMO" | "JUSTO_MAXIMA" | "TE_HAS_PASADO";
+
+const comprobarEstadoPartida = (puntuacion: number): EstadoPartida => {
+  if (puntuacion > 7.5) {
+    return "TE_HAS_PASADO";
+  }
+  if (puntuacion === 7.5) {
+    return "JUSTO_MAXIMA";
+  }
+
+  return "POR_DEBAJO_MAXIMO";
+};
+
 const generarNumeroAleatorio = (): number => {
   return Math.floor(Math.random() * 10 + 1);
 };
@@ -8,10 +21,14 @@ const transformaNumeroAleatorio = (cartaGenerada: number): number => {
   return cartaGenerada > 7 ? cartaGenerada + 2 : cartaGenerada;
 };
 
-const generarPuntuacion = (cartaGenerada: number): number => {
-  return cartaGenerada < 10
-    ? (puntuacion = puntuacion + cartaGenerada)
-    : (puntuacion = puntuacion + 0.5);
+const generarPuntuacion = (cartaGenerada: number) => {
+  const puntosSumados = cartaGenerada < 10 ? cartaGenerada : 0.5;
+  const puntuacionTrasSuma = puntuacion + puntosSumados;
+  setPuntos(puntuacionTrasSuma);
+};
+
+const setPuntos = (nuevoPunto: number): void => {
+  puntuacion = nuevoPunto;
 };
 
 const mostrarMensaje = (mensaje: string): void => {
@@ -29,10 +46,12 @@ const mostrarPuntuacion = (): void => {
 };
 
 const resultadoPartida = () => {
-  if (puntuacion > 7.5) {
+  const estado = comprobarEstadoPartida(puntuacion);
+
+  if (estado === "TE_HAS_PASADO") {
     gameOver();
   }
-  if (puntuacion === 7.5) {
+  if (estado === "JUSTO_MAXIMA") {
     partidaGanada();
   }
 };
@@ -247,16 +266,17 @@ const queHabriaPasado = () => {
 
 const mostrarMensajeResultadoPosible = () => {
   let mensaje: string = `Tu puntuación habría sido ${puntuacion}`;
+  const estado = comprobarEstadoPartida(puntuacion);
 
-  if (puntuacion < 7.5) {
+  if (estado === "POR_DEBAJO_MAXIMO") {
     mostrarMensaje(mensaje);
   }
 
-  if (puntuacion > 7.5) {
+  if (estado === "TE_HAS_PASADO") {
     mensaje = `${puntuacion} Te habrías pasado 🪦 GAME OVER`;
     mostrarMensaje(mensaje);
   }
-  if (puntuacion === 7.5) {
+  if (estado === "JUSTO_MAXIMA") {
     mensaje = `${puntuacion} Habrías ganado! 🫠`;
     mostrarMensaje(mensaje);
   }
