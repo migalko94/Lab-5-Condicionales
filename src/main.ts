@@ -150,7 +150,7 @@ const dameCarta = (): void => {
 const gestionarResultado = () => {
   deshabilitaBotonComprobarCarta();
   deshabilitaBotonMePlanto();
-  nuevaPartida();
+  habilitarBotonNuevaPartida();
 };
 
 const mensajeSegunPuntuacion = (mensaje: string): void => {
@@ -174,8 +174,8 @@ const mePlanto = () => {
   mensajeSegunPuntuacion(mensaje);
 
   resultadoPartida();
-  nuevaPartida();
-  queHabriaPasado();
+  habilitarBotonNuevaPartida();
+  habilitarBotonQueHabriaPasado();
   deshabilitaBotonComprobarCarta();
   deshabilitaBotonMePlanto();
 };
@@ -232,7 +232,7 @@ const handlerNuevaPartida = () => {
   ocultaBotonQueHabriaPasado();
 };
 
-const nuevaPartida = () => {
+const habilitarBotonNuevaPartida = () => {
   const botonNuevaPartida = document.getElementById("nueva-partida");
   if (botonNuevaPartida && botonNuevaPartida instanceof HTMLButtonElement) {
     botonNuevaPartida.hidden = false;
@@ -255,7 +255,7 @@ const handlerQueHabriaPasado = () => {
   ocultaBotonQueHabriaPasado();
 };
 
-const queHabriaPasado = () => {
+const habilitarBotonQueHabriaPasado = () => {
   const botonQueHabriaPasado = document.getElementById("que-habria-pasado");
   if (
     botonQueHabriaPasado &&
@@ -283,7 +283,11 @@ const mostrarMensajeResultadoPosible = (estado: EstadoPartida) => {
 };
 
 const mostrarQueHabriaPasado = () => {
-  dameCarta();
+  let cartaGenerada = generarNumeroAleatorio();
+  cartaGenerada = transformaNumeroAleatorio(cartaGenerada);
+  mostrarCarta(cartaGenerada);
+  generarPuntuacion(cartaGenerada);
+
   const estado = comprobarEstadoPartida(puntuacion);
   mostrarMensajeResultadoPosible(estado);
 };
