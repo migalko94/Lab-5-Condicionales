@@ -174,7 +174,8 @@ const mePlanto = () => {
   mensajeSegunPuntuacion(mensaje);
 
   resultadoPartida();
-
+  nuevaPartida();
+  queHabriaPasado();
   deshabilitaBotonComprobarCarta();
   deshabilitaBotonMePlanto();
 };
@@ -264,9 +265,8 @@ const queHabriaPasado = () => {
   }
 };
 
-const mostrarMensajeResultadoPosible = () => {
+const mostrarMensajeResultadoPosible = (estado: EstadoPartida) => {
   let mensaje: string = `Tu puntuación habría sido ${puntuacion}`;
-  const estado = comprobarEstadoPartida(puntuacion);
 
   if (estado === "POR_DEBAJO_MAXIMO") {
     mostrarMensaje(mensaje);
@@ -284,7 +284,8 @@ const mostrarMensajeResultadoPosible = () => {
 
 const mostrarQueHabriaPasado = () => {
   dameCarta();
-  mostrarMensajeResultadoPosible();
+  const estado = comprobarEstadoPartida(puntuacion);
+  mostrarMensajeResultadoPosible(estado);
 };
 
 document.addEventListener("DOMContentLoaded", mostrarPuntuacion);
@@ -296,13 +297,6 @@ if (botonComprobarCarta && botonComprobarCarta instanceof HTMLButtonElement) {
 const botonMePlanto = document.getElementById("me-planto");
 if (botonMePlanto && botonMePlanto instanceof HTMLButtonElement) {
   botonMePlanto.addEventListener("click", mePlanto);
-  botonMePlanto.addEventListener("click", nuevaPartida);
-  botonMePlanto.addEventListener("click", queHabriaPasado);
-  botonMePlanto.addEventListener("click", () => {
-    {
-      botonMePlanto.disabled = true;
-    }
-  });
 }
 const botonNuevaPartida = document.getElementById("nueva-partida");
 if (botonNuevaPartida && botonNuevaPartida instanceof HTMLButtonElement) {
