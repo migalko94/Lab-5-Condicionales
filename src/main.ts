@@ -40,11 +40,6 @@ const mostrarMensaje = (mensaje: string): void => {
       );
 };
 
-const mostrarPuntuacion = (): void => {
-  let mensaje: string = `Tu puntuación es ${puntuacion}`;
-  mostrarMensaje(mensaje);
-};
-
 const resultadoPartida = () => {
   const estado = comprobarEstadoPartida(puntuacion);
 
@@ -57,7 +52,6 @@ const resultadoPartida = () => {
 };
 
 const partidaGanada = () => {
-  mostrarPuntuacion();
   let mensaje: string = `${puntuacion} ¡Lo has clavado! ¡Enhorabuena! 🎉🎉🎉`;
   mostrarMensaje(mensaje);
 
@@ -65,7 +59,6 @@ const partidaGanada = () => {
 };
 
 const gameOver = () => {
-  mostrarPuntuacion();
   let mensaje: string = `${puntuacion} Te has pasado 🪦 GAME OVER`;
   mostrarMensaje(mensaje);
 
@@ -143,13 +136,14 @@ const dameCarta = (): void => {
   cartaGenerada = transformaNumeroAleatorio(cartaGenerada);
   mostrarCarta(cartaGenerada);
   generarPuntuacion(cartaGenerada);
-  mostrarPuntuacion();
+  let mensaje = `Tu puntuación es ${puntuacion}`;
+  mostrarMensaje(mensaje);
   resultadoPartida();
 };
 
 const gestionarResultado = () => {
-  deshabilitaBotonComprobarCarta();
-  deshabilitaBotonMePlanto();
+  habilitarBotonComprobarCarta(false);
+  habilitarBotonMePlanto(false);
   habilitarBotonNuevaPartida();
 };
 
@@ -169,36 +163,47 @@ const mensajeSegunPuntuacion = (mensaje: string): void => {
 };
 
 const mePlanto = () => {
-  mostrarPuntuacion();
   let mensaje: string = `Tu puntuación es ${puntuacion}`;
   mensajeSegunPuntuacion(mensaje);
 
   resultadoPartida();
   habilitarBotonNuevaPartida();
   habilitarBotonQueHabriaPasado();
-  deshabilitaBotonComprobarCarta();
-  deshabilitaBotonMePlanto();
+  habilitarBotonComprobarCarta(false);
+  habilitarBotonMePlanto(false);
 };
 
-const habilitaBotonComprobarCarta = () => {
-  if (botonComprobarCarta && botonComprobarCarta instanceof HTMLButtonElement) {
+const habilitarBotonComprobarCarta = (estaHabilitado: boolean) => {
+  if (
+    estaHabilitado &&
+    botonComprobarCarta &&
+    botonComprobarCarta instanceof HTMLButtonElement
+  ) {
     botonComprobarCarta.disabled = false;
   }
-};
-const habilitaBotonMePlanto = () => {
-  if (botonMePlanto && botonMePlanto instanceof HTMLButtonElement) {
-    botonMePlanto.disabled = false;
-  }
-};
 
-const deshabilitaBotonComprobarCarta = () => {
-  if (botonComprobarCarta && botonComprobarCarta instanceof HTMLButtonElement) {
+  if (
+    !estaHabilitado &&
+    botonComprobarCarta &&
+    botonComprobarCarta instanceof HTMLButtonElement
+  ) {
     botonComprobarCarta.disabled = true;
   }
 };
 
-const deshabilitaBotonMePlanto = () => {
-  if (botonMePlanto && botonMePlanto instanceof HTMLButtonElement) {
+const habilitarBotonMePlanto = (estaHabilitado: boolean) => {
+  if (
+    estaHabilitado &&
+    botonMePlanto &&
+    botonMePlanto instanceof HTMLButtonElement
+  ) {
+    botonMePlanto.disabled = false;
+  }
+  if (
+    !estaHabilitado &&
+    botonMePlanto &&
+    botonMePlanto instanceof HTMLButtonElement
+  ) {
     botonMePlanto.disabled = true;
   }
 };
@@ -225,9 +230,10 @@ const ocultaBotonNuevaPartida = () => {
 const handlerNuevaPartida = () => {
   reinicioImagen();
   puntuacionACero();
-  habilitaBotonComprobarCarta();
-  habilitaBotonMePlanto();
-  mostrarPuntuacion();
+  habilitarBotonComprobarCarta(true);
+  habilitarBotonMePlanto(true);
+  let mensaje: string = `Tu puntuación es ${puntuacion}`;
+  mostrarMensaje(mensaje);
   ocultaBotonNuevaPartida();
   ocultaBotonQueHabriaPasado();
 };
@@ -292,7 +298,8 @@ const mostrarQueHabriaPasado = () => {
   mostrarMensajeResultadoPosible(estado);
 };
 
-document.addEventListener("DOMContentLoaded", mostrarPuntuacion);
+let mensaje: string = `Tu puntuación es ${puntuacion}`;
+document.addEventListener("DOMContentLoaded", () => mostrarMensaje(mensaje));
 const botonComprobarCarta = document.getElementById("dame-carta");
 if (botonComprobarCarta && botonComprobarCarta instanceof HTMLButtonElement) {
   botonComprobarCarta.addEventListener("click", dameCarta);
