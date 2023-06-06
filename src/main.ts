@@ -1,4 +1,5 @@
 let puntuacion: number = 0;
+let cartaGenerada = 0;
 
 type EstadoPartida = "POR_DEBAJO_MAXIMO" | "JUSTO_MAXIMA" | "TE_HAS_PASADO";
 
@@ -21,15 +22,17 @@ const transformaNumeroAleatorio = (cartaGenerada: number): number => {
   return cartaGenerada > 7 ? cartaGenerada + 2 : cartaGenerada;
 };
 
-const generarPuntuacion = (cartaGenerada: number) => {
+const generarPuntuacion = (cartaGenerada: number): number => {
   const puntosSumados = cartaGenerada < 10 ? cartaGenerada : 0.5;
-  const puntuacionTrasSuma = puntuacion + puntosSumados;
-  setPuntos(puntuacionTrasSuma);
+  return puntuacion + puntosSumados;
 };
 
 const setPuntos = (nuevoPunto: number): void => {
   puntuacion = nuevoPunto;
 };
+
+const puntuacionTrasSuma = generarPuntuacion(cartaGenerada);
+setPuntos(puntuacionTrasSuma);
 
 const mostrarMensaje = (mensaje: string): void => {
   const elementoPuntuacion = document.getElementById("puntuacion");
@@ -132,10 +135,11 @@ const mostrarCarta = (cartaGenerada: number): void => {
 };
 
 const dameCarta = (): void => {
-  let cartaGenerada = generarNumeroAleatorio();
+  cartaGenerada = generarNumeroAleatorio();
   cartaGenerada = transformaNumeroAleatorio(cartaGenerada);
   mostrarCarta(cartaGenerada);
-  generarPuntuacion(cartaGenerada);
+  const puntuacionTrasSuma = generarPuntuacion(cartaGenerada);
+  setPuntos(puntuacionTrasSuma);
   let mensaje = `Tu puntuación es ${puntuacion}`;
   mostrarMensaje(mensaje);
   resultadoPartida();
@@ -292,7 +296,8 @@ const mostrarQueHabriaPasado = () => {
   let cartaGenerada = generarNumeroAleatorio();
   cartaGenerada = transformaNumeroAleatorio(cartaGenerada);
   mostrarCarta(cartaGenerada);
-  generarPuntuacion(cartaGenerada);
+  const puntuacionTrasSuma = generarPuntuacion(cartaGenerada);
+  setPuntos(puntuacionTrasSuma);
 
   const estado = comprobarEstadoPartida(puntuacion);
   mostrarMensajeResultadoPosible(estado);
